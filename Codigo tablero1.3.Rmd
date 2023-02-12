@@ -1,0 +1,124 @@
+---
+title: "Dashboard Carrera la luz 2022 - Owen Rocha"
+output: 
+  flexdashboard::flex_dashboard:
+    theme: 
+      bg: "#E6E6FA"
+      fg: "#36648B" 
+      primary: "#000000"
+      base_font:
+        google: Prompt
+      code_font:
+        google: JetBrains Mono
+    orientation: columns
+    vertical_layout: fill
+
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+# Install thematic and un-comment for themed static plots (i.e., ggplot2)
+# thematic::thematic_rmd()
+```
+
+Column {data-width=350 .tabset}
+---------------------------------
+### Analisís Sexo.
+```{r}
+library(paqueteMET)
+porcentajes <- as.numeric(round(((prop.table(table(CarreraLuz22$sex)))*100),2))
+etiquetas <- c("Mujer", "Hombre")
+etiquetas <- paste(etiquetas, porcentajes)
+etiquetas <- paste(etiquetas, "%", sep = "")
+pie(porcentajes, etiquetas,main = "Evaluación de sexo en la competencia")
+```
+
+### Analisís de categoria. 
+```{r}
+library(ggplot2)
+ggplot(CarreraLuz22, aes(categoria)) + geom_bar()
+```
+
+### Analisís de categoria.
+```{r}
+library(ggplot2)
+hist(CarreraLuz22$edad,col="lightcyan",ylab = "cantidad", xlab = "Edad",main = "Frecuencia de edad")
+```
+
+### Analisís de origen.
+```{r}
+library(ggplot2)
+tabla <- table(CarreraLuz22$origen)
+l<-prop.table(tabla)
+barplot(l, main = "Proporción de origen", ylab = "Proporción", xlab = "Ciudad origen", col = "#EE3B3B")
+```
+
+Column {data-width=350 .tabset}
+------------------------------------------------------
+### Sexo por categoria
+
+```{r}
+library(paqueteMET)
+data("CarreraLuz22")
+library(ggplot2)
+library(dplyr)
+ggplot(CarreraLuz22, aes(sex)) + 
+  geom_bar(aes(fill=categoria)) + theme_classic() 
+```
+
+### Tiempo de carrera por categoria
+
+```{r}
+library(paqueteMET)
+
+data("CarreraLuz22")
+ggplot(CarreraLuz22, aes(CarreraLuz22$categoria, (CarreraLuz22$timerun)/60, colour = CarreraLuz22$categoria)) + geom_point()
+```
+
+### Analisis Edad por genero
+
+```{r}
+library(paqueteMET)
+data("CarreraLuz22")
+#boxplot(CarreraLuz22$edad,col = "red")
+boxplot(CarreraLuz22$edad~CarreraLuz22$sex,col="gold",xlab="Genero",ylab="Edad",
+        main="Comportamiento de edad por genero")
+```
+
+Column {data-width=50}
+------------------------------------------------------
+
+### promedio  {.value-box}
+```{r}
+valueBox(value = paste(round(mean(CarreraLuz22$timerun/60),2),"min"), caption = "Tiempo promedio de carrera", color = "blue")
+```
+
+### Datos {.value-box}
+```{r}
+valueBox( value = paste(round(min(CarreraLuz22$timerun/60),2),"min"),caption = "Tiempo minimo de carrera ", color = "blue")
+
+```
+
+### Datos {.value-box}
+```{r}
+valueBox(value = paste(round(max(CarreraLuz22$timerun/60),2),"min"),caption = "Tiempo maximo de carrera", color = "blue")
+
+```
+
+### Datos {.value-box}
+```{r}
+valueBox(value = paste(round(mean(CarreraLuz22$edad),2),"años"), caption = "Edad promedio de competidores", color = "blue")
+```
+
+### Datos {.value-box}
+```{r}
+valueBox(value = paste(max(CarreraLuz22$edad), "años"),caption = "Edad maxima de competidor", color = "blue")
+
+```
+
+### Datos {.value-box}
+```{r}
+valueBox(value = paste(min(CarreraLuz22$edad), "años"),caption = "Edad minima de competidor", color = "blue")
+```
+
+
